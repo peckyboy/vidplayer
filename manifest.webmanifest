@@ -1,8 +1,8 @@
 {
-    "name": "A fully functional video player webApp",
+    "name": "video player webApp",
     "short_name": "Video Player",
-    "start_url": "index.html",
-    "display": "standalone",
+    "start_url": "/vidplayer/index.html",
+    "display": "fullscreen",
     "orientation": "portrait",
     "background_color": "orange",
     "theme_color": "rgb(18, 117, 117)",
