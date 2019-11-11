@@ -1,0 +1,31 @@
+{
+    "name": "A fully functional video player webApp",
+    "short_name": "Video Player",
+    "start_url": "index.html",
+    "display": "standalone",
+    "orientation": "portrait",
+    "background_color": "orange",
+    "theme_color": "rgb(18, 117, 117)",
+    "icons": [
+      {
+        "src": "./assets/icons/vid96.png",
+        "sizes": "96x96",
+        "type": "image/png"
+      },
+      {
+        "src": "./assets/icons/vid144.png",
+        "sizes": "144x144",
+        "type": "image/png"
+      },
+      {
+        "src": "./assets/icons/vid256.png",
+        "sizes": "256x256",
+        "type": "image/png"
+      },
+      {
+        "src": "./assets/icons/vid512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+      ]
+  }

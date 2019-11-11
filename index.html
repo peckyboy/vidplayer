@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="theme-color" content="rgb(18, 117, 117)" >
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="./assets/icons/vid144.png" sizes="144*144">
+    <link rel="icon" href="./assets/icons/vid96.png" sizes="96*96">
+    <link rel="icon" href="./assets/icons/vid256.png" sizes="256*256">
+    <link rel="icon" href="./assets/icons/vid512.png" sizes="512*512">
+    <link rel="icon" href="./assets/icons/vid32.png" sizes="32*32">
+    <link rel="apple-touch-icon" href="./assets/icons/vid96.png">
+    <link rel="apple-touch-icon" href="./assets/icons/vid512.png">
+    <meta name="apple-mobile-web-app-status-bar" content="rgb(18, 117, 117)">
+    <title>Video Player</title>
+</head>
+<style>
+  body, html{
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+  .drag_intro {
+    height: 100vh;
+    overflow: auto;
+  }
+  #video {
+    position: relative;
+    width: inherit;
+  }
+  #listtoggler {
+    position: absolute;
+    z-index: 2;
+    display: none;
+  }
+  #file_upload {
+    position: absolute;
+    width: 0;
+    height: 0;
+  }
+  .display{
+    height: 100vh;
+    width: 100vw;
+  }
+  .container_vid {
+    position: absolute;
+    display: none;
+    z-index: 4;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    width: 68vw;
+    background-color: rgb(18, 117, 117);
+  }
+  .container_vid>button#togglefull {
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 4
+  }
+  #list {
+    border: 1px black dashed;
+    height: 70vh;
+    display: none;
+    width: 30vw;
+    list-style-type: none;
+    padding-inline-start: 0;
+    margin-block-start: 0;
+    margin-bottom: 0;
+    overflow: hidden;
+    overflow-y: scroll;
+  
+  }
+  .new_drag {
+    width:30vw;
+    left: 0;
+    height:20vh;
+    position: fixed;
+    bottom: 0;
+    background-color: #ccc;
+  }
+  #list li {
+    height: 50px;
+    background-color: rgb(233, 206, 206);
+    margin-bottom: 10px;
+    height: max-content;
+    width: inherit
+  }
+  .del-btn {
+    border: none;
+    background-color: #f34c52;
+    color: antiquewhite;
+    border-radius: 1em;
+    position: absolute;
+    right: 0;
+    transform: translateY(50%)
+  }
+  .del-btn:active,.del-btn:focus{
+    background-color: red;
+  }
+/* controls */
+.ctr_vis{
+  visibility: hidden;
+}
+.controls {
+  position: absolute;
+  bottom:0;
+  width: 100%;
+  z-index: 3;
+  transition: all 1s ease-in-out;
+}
+/* .container_vid:hover .ctr_vis{
+  visibility: visible;
+} */
+@keyframes visibilityanim{
+  from{visibility: hidden;}to{visibility: visible;}
+}
+.controls .backbar{
+  width: 100%;
+  height: 30px;
+  background-color: red;
+}
+.controls .fill {
+  width: 10px;
+  position: absolute;
+  left: 0;
+  height: inherit;
+  background-color: #ccc;
+  transform: translateX(-50%);
+}
+.controls .buttons{
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+}
+.btn-custom {
+  border: none;
+    padding: .3rem;
+    width: 3em;
+    background-color: #ee6e73;
+    color: antiquewhite;
+    border-radius: 1em;
+    box-shadow: black 0px 1px 7px;
+    transform: scale(1);
+    transition: all .3s ease-in-out;
+}
+.btn-custom:active{
+  color: black;
+  background-color: rgba(172, 255, 47, 0.774);
+  box-shadow: white 0 0 5px;
+  transform: scale(.95);
+}
+.btn-custom:focus{
+  background-color: #ee6e73 !important;
+}
+.fill #curr_time{
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  padding:2px;
+  background-color: rgba(0, 0, 0, 0.746);
+}
+.vol_disp{
+  position: absolute;
+  z-index: 1;
+  color: white;
+  left: 85%;
+  transform: translate(-50%,-50%);
+  top: 50%;
+  padding:2px;
+  background-color: rgba(0, 0, 0, 0.746);
+}
+.float-play{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  font-size: 3em;
+  color: red;
+  z-index: 3;
+  opacity: 1;
+  transition: opacity 1s linear;
+}
+.fade-out {
+  opacity: 0;
+}
+.nowplaying {
+  background-color: red !important;
+}
+.mobile {
+  display: none;
+}
+.more_files:not(.mobile){
+  display: none;
+  height: 25vh;
+}
+@keyframes showTem {
+  0% {
+    opacity: 1;
+  }
+  70% {
+    opacity: .5;
+  }
+  100%{
+    opacity: 0
+  }
+}
+.noshow{
+  display: none;
+}
+.tab-phone{
+  display: none
+}
+@media screen and (max-width: 768px)  and  ( orientation: landscape) {
+  .more_files:not(.mobile){
+    display: none;
+  }
+}
+@media screen and (max-width: 768px){
+  .desktop{
+    display: none
+  }
+  .tab-phone{
+    display: initial;
+  }
+}
+@media screen and (max-width: 768px) and  ( orientation: portrait) {
+  .more_files:not(.mobile){
+    display: none !important;
+  }
+  .container_vid {
+    position: fixed;
+    width: 100vw;
+    transform:translateY(0);
+    top: 0;
+    height: 50%;
+  }
+  #video{
+    height: 100%;
+  }
+  #list {
+    position: absolute;
+    bottom: 0;
+    left: 40%;
+    transform: translateX(-40%);
+    width: 70vw;
+    height: 49%;
+  }
+
+  .new_drag {
+    display: none;
+  }
+
+.mobile {
+    display: block;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    background-color: orange;
+    border-radius: 50%;
+  }
+  .fullscreen {
+    top: 50%;
+    transform: translateY(-50%)
+  }
+}
+</style>
+
+
+
+<body >
+  <div class="drag_intro container">
+      <h4> <span class="desktop">Drag and Drop Files or</span> Click screen to add video files</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Controls</th>
+            <th>ShortCuts</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>play/Pause</td>
+            <td>Click <i class="fa fa-play"></i> button or double click on video <span class="desktop"> or <i class="fa fa-keyboard"></i> Spacebar</span></td>
+          </tr>
+          <tr>
+            <td>Next</td>
+            <td>Click <i class="fa fa-fast-forward"></i> button <span class="desktop"> or <i class="fa fa-keyboard"></i> N</span></td>
+          </tr>
+          <tr>
+            <td>Previous</td>
+            <td>Click <i class="fa fa-fast-backward"></i> button <span class="desktop"> or <i class="fa fa-keyboard"></i> P</span></td>
+          </tr>
+          <tr>
+            <td>Skip forward</td>
+            <td>Click <i class="fa fa-forward"></i> button <span class="desktop"> or <i class="fa fa-keyboard"></i> <i class="fa fa-arrow-right"></i></span> <span class="tab-phone"> or swipe video screen to the right</span> </td>
+          </tr>
+          <tr>
+            <td>Skip backward</td>
+            <td>Click <i class="fa fa-backward"></i> button <span class="desktop"> or <i class="fa fa-keyboard"></i> <i class="fa fa-arrow-left"></i></span> <span class="tab-phone"> or swipe video screen to the left</span></td>
+          </tr>
+          <tr>
+            <td>Enable/Disable Shuffle</td>
+            <td>Click <i class="fa fa-exchange-alt"></i> button <span class="desktop"> or <i class="fa fa-keyboard"></i> S</span></td>
+          </tr>
+          <tr>
+            <td>Enable/Disable Autoplay</td>
+            <td>Click <i class="fa fa-greater-than"></i> button <span class="desktop"> or <i class="fa fa-keyboard"></i> A</span></td>
+          </tr>
+          <tr>
+            <td>Adjust Volume</td>
+            <td><span class="desktop"> click <i class="fa fa-keyboard"></i> </span><span class="tab-phone">swipe video screen </span> <i class="fa fa-arrow-up"></i> or <i class="fa fa-arrow-down"></i> to <i class="fa fa-plus"></i> or <i class="fa fa-minus"></i> respectively </td>
+          </tr>
+          <tr>
+            <td>Toggle fullscreen</td>
+            <td> click <i class="fa fa-expand"></i> button to change to full screen and vice versa </td>
+          </tr>
+          <tr>
+            <td>Add more videos</td>
+            <td> click the <span class="desktop">grey area or drag and drop more files</span><span class="tab-phone mobile btn-floating btn-small" style="position: initial" ><i class="fa fa-plus"></i> </span> to add more files to the playlist </td>
+          </tr>
+          <tr>
+            <td>Remove video from list only (not from internal memory)</td>
+            <td> click the <i class="fa fa-minus " ></i> </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="2" > NOTE: depending on the browser used and the file picker of the file manager you use on your device (especially mobile devices), you will be able to select multiple files at once.
+            <div>The limitations of this video player is based on limitations of browsers in general and your browser of choice and file picker of your device.</div>  
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+  </div>
+  <button id="listtoggler" >ShowList</button>
+  <input type="file" name="" id="file_upload" multiple accept="video/*, audio/*">
+  <div class="display ">
+    <div class="container_vid ">
+      <h5 class="noshow" style="position: absolute;top:0;text-align: center;color: white;">If you are seeing this, it is because your browser is not able to turn your phone to landscape. Make sure autorotate is enabled on your device.</h5>
+      <button class="ctr_vis btn-custom" id="togglefull"><i class="fa fa-expand"></i></button>
+      <div class="vol_disp"></div>
+      <i class="fa fa-play play_disp float-play noshow"></i>
+      <video autoplay id="video"></video>
+      <div class="controls ctr_vis">
+        <div class="buttons">
+          <label class="btn-custom" for="shuffle">
+            <i class="fa fa-exchange-alt"></i>
+            <input type="checkbox" id="shuffle">
+          </label>
+          <button class="btn-custom" id="prev"><i class="fa fa-fast-backward"></i></button>
+          <button class="btn-custom" id="backward"><i class="fa fa-backward"></i></button>
+          <button class="btn-custom" id="play"><i class="fa fa-play play_disp"></i></button>
+          <button class="btn-custom" id="forward"><i class="fa fa-forward"></i></button>
+          <button class="btn-custom" id="next"><i class="fa fa-fast-forward"></i></button>
+          <label class="btn-custom" for="autoplay">
+              <i class="fa fa-greater-than"></i>
+              <input type="checkbox" checked id="autoplay">
+          </label>
+        </div>
+        <div class="backbar red darken-2">
+          <div class="fill"> <div id="curr_time"></div> </div>
+        </div>
+      </div>
+    </div>
+    <ul id="list" class="collection ">
+    </ul>
+    <div class="new_drag more_files">Drag or click to add to list</div>
+  </div>
+  <video src="" style="display: none;" id="meta_video"></video>
+  <span class="mobile more_files waves-effect waves-dark btn-floating btn-large"> <i class="fa fa-plus"></i> </span>
+</body>
+<script src="./assets/main.js"></script>
+<script src="./sw.js"></script>
+<script>
+  if(navigator.serviceWorker){
+    navigator.serviceWorker.register('./sw.js').then(reg=>console.log(reg)).catch(err=>console.log(err))
+  }
+</script>
+</html>
