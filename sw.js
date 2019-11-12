@@ -8,6 +8,15 @@ self.addEventListener('install',e=>{
         .catch(err=>console.log(err,'error'))
         )
 })
+self.addEventListener('activate',e=>{
+    e.waitUntil(
+        caches.keys().then(keys=>{
+            return Promise.all(
+                keys.filter(key=>key!==cachename).map(key=>caches.delete(key))
+            )
+        })
+    )
+})
 
 self.addEventListener('fetch',e=>{
     e.respondWith(async function() {
