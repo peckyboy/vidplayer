@@ -1,4 +1,4 @@
-const cachename = 'vid-2.0'
+const cachename = 'vid-2.1'
 const assets = ['/vidplayer/','/vidplayer/index.html','/vidplayer/assets/main.js',"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css","https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"]
 self.addEventListener('install',e=>{
     e.waitUntil(
