@@ -221,6 +221,10 @@
 .tab-phone{
   display: none
 }
+.fullscreen {
+    top: 50%;
+    transform: translateY(-50%)
+}
 @media screen and (max-width: 768px)  and  ( orientation: landscape) {
   .more_files:not(.mobile){
     display: none;
@@ -268,10 +272,6 @@
     right: 0;
     background-color: orange;
     border-radius: 50%;
-  }
-  .fullscreen {
-    top: 50%;
-    transform: translateY(-50%)
   }
 }
 </style>
@@ -364,7 +364,7 @@
           <button class="btn-custom" id="forward"><i class="fa fa-forward"></i></button>
           <button class="btn-custom" id="next"><i class="fa fa-fast-forward"></i></button>
           <label class="btn-custom" for="autoplay">
-              <i class="fa fa-greater-than"></i>
+              <i class="fa fa-angle-right"></i>
               <input type="checkbox" checked id="autoplay">
           </label>
         </div>
