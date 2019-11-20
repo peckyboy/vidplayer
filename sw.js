@@ -1,5 +1,5 @@
-const cachename = 'vid1'
-const assets = ['/vidplayer/','/vidplayer/index.html','/vidplayer/assets/main.js',"/vidplayer/assets/fontawesome.min.css","/vidplayer/assets/materialize.min.css","/vidplayer/webfonts/fa-solid-900.woff2","/vidplayer/webfonts/fa-solid-900.woff"]
+const cachename = 'vid2'
+const assets = ['/vidplayer/','/vidplayer/index.html','/vidplayer/assets/main.js',"/vidplayer/assets/fontawesome.min.css","/vidplayer/assets/materialize.min.css","/vidplayer/assets/webfonts/fa-solid-900.woff2","/vidplayer/assets/webfonts/fa-solid-900.woff"]
 self.addEventListener('install',e=>{
     e.waitUntil(
         caches.open(cachename)
