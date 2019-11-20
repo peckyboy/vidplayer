@@ -386,5 +386,9 @@
   if(navigator.serviceWorker){
     navigator.serviceWorker.register('sw.js').then(reg=>console.log(reg)).catch(err=>console.log(err))
   }
+    if(!("ontouchstart" in document.documentElement)){
+        qsa('.desktop').forEach(el=>el.style.display="initial")
+        qsa('.tab-phone').forEach(el=>el.style.display="none")
+    }
 </script>
 </html>
