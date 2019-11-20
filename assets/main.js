@@ -64,7 +64,7 @@ autoplay_el.onclick = function(){
     autoplay = this.checked
     video.autoplay=autoplay
     let auto_disp = autoplay_el.previousElementSibling.classList
-    autoplay?auto_disp.replace('fa-ban','fa-greater-than'):auto_disp.replace('fa-greater-than','fa-ban')
+    autoplay?auto_disp.replace('fa-ban','fa-angle-right'):auto_disp.replace('fa-angle-right','fa-ban')
 }
 //e for shuffle
 shuffle.addEventListener('click',shuffleFn,false)
