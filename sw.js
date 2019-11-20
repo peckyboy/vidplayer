@@ -1,4 +1,4 @@
-const cachename = 'vid-3.1'
+const cachename = 'vid4'
 const assets = ['/vidplayer/','/vidplayer/index.html','/vidplayer/assets/main.js',"/vidplayer/assets/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2","/vidplayer/assets/materialize.min.css"]
 self.addEventListener('install',e=>{
     e.waitUntil(
